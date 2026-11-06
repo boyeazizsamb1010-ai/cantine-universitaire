@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block titre %}Mes commandes{% endblock %}
+{% block contenu %}
+<h1>Mes commandes du jour</h1>
+<table class="carte">
+  <thead>
+    <tr><th>N°</th><th>Heure</th><th>Client</th><th>Cat.</th><th>Total</th><th>Statut</th><th>Actions</th></tr>
+  </thead>
+  <tbody>
+  {% for id_cmd, date_cmd, client, categorie, total, statut in commandes %}
+    <tr>
+      <td>{{ id_cmd }}</td>
+      <td>{{ date_cmd.strftime('%H:%M') }}</td>
+      <td>{{ client }}</td>
+      <td>{{ categorie }}</td>
+      <td>{{ total | fcfa }}</td>
+      <td><span class="statut statut-{{ statut | lower }}">{{ statut }}</span></td>
+      <td>
+        {% if statut == 'EN_COURS' %}
+        <form method="post" action="{{ url_for('serveur.encaisser', id_commande=id_cmd) }}" class="en-ligne">
+          <select name="mode_paiement">
+            {% for mode in modes %}<option value="{{ mode }}">{{ mode.replace('_', ' ') | title }}</option>{% endfor %}
+          </select>
+          <button type="submit">Encaisser</button>
+        </form>
+        <form method="post" action="{{ url_for('serveur.annuler', id_commande=id_cmd) }}" class="en-ligne"
+              onsubmit="return confirm('Annuler cette commande ?');">
+          <button type="submit" class="secondaire">Annuler</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+  {% else %}
+    <tr><td colspan="7">Aucune commande aujourd'hui.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

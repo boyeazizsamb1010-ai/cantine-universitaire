@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block titre %}Stocks{% endblock %}
+{% block contenu %}
+<h1>Gestion des stocks</h1>
+
+<table class="carte">
+  <thead><tr><th>Ingrédient</th><th>Stock</th><th>Seuil d'alerte</th><th>État</th><th>Réapprovisionner</th></tr></thead>
+  <tbody>
+  {% for id_ing, libelle, unite, stock, seuil, en_alerte in ingredients %}
+    <tr>
+      <td>{{ libelle }}</td>
+      <td>{{ stock | float }} {{ unite }}</td>
+      <td>{{ seuil | float }} {{ unite }}</td>
+      <td>
+        {% if en_alerte %}<span class="statut statut-annulee">À commander</span>
+        {% else %}<span class="statut statut-payee">OK</span>{% endif %}
+      </td>
+      <td>
+        <form method="post" class="en-ligne">
+          <input type="hidden" name="id_ingredient" value="{{ id_ing }}">
+          <input type="number" name="quantite" step="0.001" class="petit" required
+                 title="Quantité positive pour ajouter, négative pour retirer">
+          <button type="submit" class="secondaire">Ajouter</button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

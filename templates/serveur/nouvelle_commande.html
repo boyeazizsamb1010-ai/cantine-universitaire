@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block titre %}Nouvelle commande{% endblock %}
+{% block contenu %}
+<h1>Nouvelle commande</h1>
+<form method="post" class="carte" id="form-commande">
+  <label>Matricule du client (carte étudiant ou agent)
+    <input name="matricule" required placeholder="ex : ETU2026001">
+  </label>
+
+  <table>
+    <thead><tr><th>Catégorie</th><th>Plat</th><th>Prix de base</th><th>Quantité</th></tr></thead>
+    <tbody>
+    {% for id_plat, nom, prix, categorie in plats %}
+      <tr>
+        <td>{{ categorie }}</td>
+        <td>{{ nom }}</td>
+        <td>{{ prix | fcfa }}</td>
+        <td>
+          <!-- Seuls l'id et la quantité sont envoyés : le prix est recalculé côté serveur -->
+          <input type="number" name="qte_{{ id_plat }}" min="0" max="20" value="0"
+                 class="quantite" data-prix="{{ prix }}">
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="4">Aucun plat disponible.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <p class="estimation">
+    Estimation au tarif normal : <strong id="estimation">0 FCFA</strong><br>
+    <small>La réduction étudiante est appliquée automatiquement à l'enregistrement.</small>
+  </p>
+  <button type="submit">Enregistrer la commande</button>
+</form>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/commande.js') }}"></script>
+{% endblock %}

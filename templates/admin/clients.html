@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block titre %}Clients{% endblock %}
+{% block contenu %}
+<h1>Gestion des clients</h1>
+
+<form method="post" class="carte grille-form">
+  <h2>Ajouter un client</h2>
+  <label>Matricule <input name="matricule" required></label>
+  <label>Prénom <input name="prenom" required></label>
+  <label>Nom <input name="nom" required></label>
+  <label>Email <input type="email" name="email"></label>
+  <label>Téléphone <input name="telephone"></label>
+  <label>Catégorie
+    <select name="code_categorie" required>
+      {% for code, libelle in categories %}<option value="{{ code }}">{{ libelle }}</option>{% endfor %}
+    </select>
+  </label>
+  <button type="submit">Ajouter</button>
+</form>
+
+<table class="carte">
+  <thead><tr><th>Matricule</th><th>Nom</th><th>Catégorie</th><th>Réduction</th><th>Actif</th></tr></thead>
+  <tbody>
+  {% for matricule, nom, categorie, taux, actif in clients %}
+    <tr class="{{ '' if actif else 'inactif' }}">
+      <td>{{ matricule }}</td>
+      <td>{{ nom }}</td>
+      <td>{{ categorie }}</td>
+      <td>{{ (taux * 100) | int }} %</td>
+      <td>{{ 'Oui' if actif else 'Non' }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

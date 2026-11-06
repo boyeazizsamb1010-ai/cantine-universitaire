@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block titre %}Historique{% endblock %}
+{% block contenu %}
+<h1>Historique des commandes</h1>
+
+<form method="get" class="carte filtres">
+  <label>Du <input type="date" name="debut" value="{{ debut }}"></label>
+  <label>Au <input type="date" name="fin" value="{{ fin }}"></label>
+  <button type="submit">Filtrer</button>
+</form>
+
+<div class="indicateurs">
+  <div class="carte"><span>Total encaissé</span><strong>{{ total_encaisse | fcfa }}</strong></div>
+  <div class="carte"><span>Encaissements</span><strong>{{ nb_encaissements }}</strong></div>
+</div>
+
+<table class="carte">
+  <thead>
+    <tr><th>N°</th><th>Date</th><th>Client</th><th>Catégorie</th><th>Serveur</th><th>Total</th><th>Statut</th><th>Paiement</th></tr>
+  </thead>
+  <tbody>
+  {% for id_cmd, date_cmd, client, categorie, serveur, total, statut, mode in commandes %}
+    <tr>
+      <td>{{ id_cmd }}</td>
+      <td>{{ date_cmd.strftime('%d/%m/%Y %H:%M') }}</td>
+      <td>{{ client }}</td>
+      <td>{{ categorie }}</td>
+      <td>{{ serveur }}</td>
+      <td>{{ total | fcfa }}</td>
+      <td><span class="statut statut-{{ statut | lower }}">{{ statut }}</span></td>
+      <td>{{ mode or '—' }}</td>
+    </tr>
+  {% else %}
+    <tr><td colspan="8">Aucune commande sur cette période.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block titre %}Connexion{% endblock %}
+{% block contenu %}
+<section class="carte carte-etroite">
+  <h1>Connexion</h1>
+  <form method="post">
+    <label>Identifiant
+      <input name="login" required autofocus autocomplete="username">
+    </label>
+    <label>Mot de passe
+      <input name="mot_de_passe" type="password" required autocomplete="current-password">
+    </label>
+    <button type="submit">Se connecter</button>
+  </form>
+</section>
+{% endblock %}

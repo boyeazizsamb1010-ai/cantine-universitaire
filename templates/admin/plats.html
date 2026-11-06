@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block titre %}Plats{% endblock %}
+{% block contenu %}
+<h1>Gestion des plats</h1>
+
+<form method="post" class="carte grille-form">
+  <h2>Ajouter un plat</h2>
+  <label>Nom <input name="nom" required></label>
+  <label>Catégorie
+    <select name="id_categorie_plat" required>
+      {% for id_cat, libelle in categories %}<option value="{{ id_cat }}">{{ libelle }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Prix de base (FCFA) <input type="number" name="prix_base" min="1" step="1" required></label>
+  <label>Description <input name="description"></label>
+  <button type="submit">Ajouter</button>
+</form>
+
+<table class="carte">
+  <thead><tr><th>Plat</th><th>Catégorie</th><th>Prix de base</th><th>Disponible</th><th></th></tr></thead>
+  <tbody>
+  {% for id_plat, nom, categorie, prix, disponible in plats %}
+    <tr class="{{ '' if disponible else 'inactif' }}">
+      <td>{{ nom }}</td>
+      <td>{{ categorie }}</td>
+      <td>
+        <form method="post" action="{{ url_for('admin.modifier_prix', id_plat=id_plat) }}" class="en-ligne">
+          <input type="number" name="prix_base" value="{{ prix | int }}" min="1" step="1" class="petit">
+          <button type="submit" class="secondaire">OK</button>
+        </form>
+      </td>
+      <td>{{ 'Oui' if disponible else 'Non' }}</td>
+      <td>
+        <form method="post" action="{{ url_for('admin.basculer_disponibilite', id_plat=id_plat) }}">
+          <button type="submit" class="secondaire">{{ 'Désactiver' if disponible else 'Activer' }}</button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titre %}Cantine{% endblock %} · Cantine universitaire</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header class="entete">
+    <a class="logo" href="{{ url_for('accueil') }}">🍽️ Cantine</a>
+    {% if session.get('role') %}
+    <nav>
+      {% if session['role'] == 'SERVEUR' %}
+        <a href="{{ url_for('serveur.nouvelle_commande') }}">Nouvelle commande</a>
+        <a href="{{ url_for('serveur.commandes_du_jour') }}">Mes commandes</a>
+      {% elif session['role'] == 'ADMIN' %}
+        <a href="{{ url_for('admin.historique') }}">Historique</a>
+        <a href="{{ url_for('admin.plats') }}">Plats</a>
+        <a href="{{ url_for('admin.clients') }}">Clients</a>
+        <a href="{{ url_for('admin.stocks') }}">Stocks</a>
+      {% endif %}
+    </nav>
+    <div class="utilisateur">
+      {{ session['nom_complet'] }} <span class="badge">{{ session['role'] }}</span>
+      <a href="{{ url_for('auth.logout') }}">Déconnexion</a>
+    </div>
+    {% endif %}
+  </header>
+
+  <main class="contenu">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for categorie, message in messages %}
+        <div class="alerte alerte-{{ categorie }}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+    {% block contenu %}{% endblock %}
+  </main>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>
